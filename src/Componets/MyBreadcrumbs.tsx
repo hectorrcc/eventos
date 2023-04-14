@@ -9,23 +9,15 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
   console.info('You clicked a breadcrumb.');
 }
 
-
-
 export default function MyBreadcrumbs() {
   return (
     <div role="presentation" onClick={handleClick}>
       <Breadcrumbs aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="/">
-          MUI
+        <Link underline="hover" color="inherit" href="/clientes">
+          Inicio
         </Link>
-        <Link
-          underline="hover"
-          color="inherit"
-          href="/material-ui/getting-started/installation/"
-        >
-          Core
-        </Link>
-        <Typography color="text.primary">Breadcrumbs</Typography>
+       
+        <Typography color="text.primary">Clientes</Typography>
       </Breadcrumbs>
     </div>
   );

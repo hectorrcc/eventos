@@ -1,8 +1,8 @@
-import Clientes from "../Pages/Clientes";
-import Calendario from "../Pages/Calendario";
 import Layout from "../Componets/Layout";
 import Home from "../Pages/Home";
 import { RouteObject } from "react-router";
+import IndexClient from "../Pages/Clientes/IndexClient";
+import IndexEventos from "../Pages/Eventos/IndexEventos";
 
 
 export const MyRouters: RouteObject = {
@@ -15,11 +15,12 @@ export const MyRouters: RouteObject = {
     },
     {
       path: "/clientes",
-      element: <Clientes />,
+      element: <IndexClient />,
+      
     },
     {
       path: "/calendario",
-      element: <Calendario />,
+      element: <IndexEventos />,
     },
   ]
 };

@@ -1,7 +1,7 @@
 import * as React from "react";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
-import Paper from "@mui/material/Paper";
+
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Typography from "@mui/material/Typography";
 import CalendarMonthSharpIcon from "@mui/icons-material/CalendarMonthSharp";
@@ -17,7 +17,7 @@ export default function MyMenu() {
           <ListItemIcon>
             <DashboardSharpIcon fontSize="small" />
           </ListItemIcon>
-          <Typography variant="inherit">Tablero</Typography>
+          <Typography variant="inherit">Inicio</Typography>
         </MenuItem>
       </Link>
       <Link href="/clientes" underline="none" color={"#757575"}>
@@ -34,7 +34,7 @@ export default function MyMenu() {
             <CalendarMonthSharpIcon fontSize="small" />
           </ListItemIcon>
           <Typography variant="inherit" noWrap>
-            Calendario
+            Eventos
           </Typography>
         </MenuItem>
       </Link>
