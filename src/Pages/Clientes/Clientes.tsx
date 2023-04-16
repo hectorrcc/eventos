@@ -7,7 +7,6 @@ import { clientContex, createContex } from "./ClientProvider";
 import { getClientes } from "./Clients.Fireabe";
 import MyCircularProgress from "../../Componets/MyCircularProgress";
 import { Client } from "../../app/MyInterfaces";
-import { createClient } from "../../Firebase/seds";
 
 export const client: Client = {
   id: "",
@@ -50,7 +49,6 @@ export default function Clientes() {
     }
   };
 
-  
   if (loading) {
     return <MyCircularProgress />;
   } else {
@@ -58,7 +56,6 @@ export default function Clientes() {
       return (
         <>
           <MyModalClient handleOpenModal={handleOpenModal} open={openModal} />
-          
           <MyTable handleOpenModal={handleOpenModal} />
         </>
       );

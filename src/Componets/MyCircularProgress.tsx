@@ -1,5 +1,5 @@
 import CircularProgress from "@mui/material/CircularProgress";
-import './MyStilos.css';
+import '../css/MyStilos.css'
 
 export default function MyCircularProgress() {
     return(

@@ -86,3 +86,7 @@ export async function editClient(client: Client) {
     
   }
 }
+
+export async function userexit(id: string) {
+  
+}

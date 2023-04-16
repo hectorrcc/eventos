@@ -80,10 +80,20 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
           handleOpenModal();
           enqueueSnackbar("Cliente agregado con exito", {
             variant: "success",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "bottom",
+            },
           });
         }
       } catch (error) {
-        enqueueSnackbar("error al crear el cliente", { variant: "error" });
+        enqueueSnackbar("error al crear el cliente", {
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "bottom",
+          },
+        });
       }
     };
     response();
@@ -109,6 +119,10 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
         handleOpenModal();
         enqueueSnackbar("Cliente editado con exito", {
           variant: "success",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "bottom",
+          },
         });
       }
     };

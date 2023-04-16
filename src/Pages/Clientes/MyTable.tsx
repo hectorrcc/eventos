@@ -56,19 +56,19 @@ export default function MyTable({ handleOpenModal }: PropTable) {
     setLoading,
   } = useContext(clientContex) as createContex;
 
-  const handleDeleteClient = async () => {  
+  const handleDeleteClient = async () => {
     setLoading(true);
     if (clientDelete.length > 0) {
       await deletClient(clientDelete);
-     const temp = clientes;
-     clientDelete.forEach((item)=>{
-      temp.map((client, key)=>{
-        if (client.id === item) {
-          temp[key] = temp[temp.length -1]
-          temp.pop();
-        }
-      })
-     })
+      const temp = clientes;
+      clientDelete.forEach((item) => {
+        temp.map((client, key) => {
+          if (client.id === item) {
+            temp[key] = temp[temp.length - 1];
+            temp.pop();
+          }
+        });
+      });
 
       setClientDelete([]);
       console.log(temp);
@@ -79,6 +79,10 @@ export default function MyTable({ handleOpenModal }: PropTable) {
       setLoading(false);
       enqueueSnackbar("Cliente eliminado con exito", {
         variant: "success",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "bottom",
+        },
       });
     }
   };
@@ -180,7 +184,6 @@ export default function MyTable({ handleOpenModal }: PropTable) {
     return createData(id, name, lastName, email, phone);
   });
 
- 
   return (
     <>
       <MyBar

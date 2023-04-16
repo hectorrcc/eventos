@@ -1,9 +1,9 @@
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
-import imagen from "../img/agregar-archivo.png";
+import imagen from "../asset/img/agregar-archivo.png";
 import MyItem from "../Componets/Item";
 import { Typography } from "@mui/material";
 import React from "react";
-import   "./MyStilos.css"
+import   "../css/MyStilos.css"
 
 interface PropImagen {
     handleEvent: ()=> void

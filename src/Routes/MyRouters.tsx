@@ -19,7 +19,7 @@ export const MyRouters: RouteObject = {
       
     },
     {
-      path: "/calendario",
+      path: "/eventos",
       element: <IndexEventos />,
     },
   ]
