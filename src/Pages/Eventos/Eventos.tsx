@@ -1,6 +1,6 @@
 import { Scheduler } from "@aldabil/react-scheduler";
 import { useEffect, useState } from "react";
-import { getClientes } from "../Clientes/Clients.Fireabe";
+import { getClientes } from "../../Firebase/Collections/Clients.Fireabe";
 import {
   blue,
   green,
@@ -23,8 +23,9 @@ import {
   deleteEvent,
   editEvent,
   getEventos,
-} from "./eventos.firabase";
-import { log } from "console";
+} from "../../Firebase/Collections/eventos.firabase";
+
+import { useClient } from "../../CustomHooks";
 
 const colors: SelectOption[] = [
   {
@@ -65,28 +66,15 @@ const colors: SelectOption[] = [
 ];
 
 export default function Eventos() {
-  const [clientesCalendar, setClientesCalendar] = useState<SelectOption[]>([]);
-  const [loading, setloading] = useState(true);
-
-  useEffect(() => {
-    const client = async () => {
-      const list = await getClientes();
-
-      let temp = list.map((item) => {
-        const tem = {
-          id: item.id,
-          text: item.name + " " + item.lastName,
-          value: item.id,
-        };
-        return tem;
-      });
-
-      setClientesCalendar(temp);
-      setloading(false);
+  const { clients, load } = useClient();
+  let lisClient = clients.map((item) => {
+    const tem = {
+      id: item.id,
+      text: item.name + " " + item.lastName,
+      value: item.id,
     };
-
-    client();
-  }, []);
+    return tem;
+  });
 
   const fetchRemote = async (query: ViewEvent): Promise<ProcessedEvent[]> => {
     const result = await getEventos(query);
@@ -102,7 +90,7 @@ export default function Eventos() {
 
     if (action === "edit") {
       console.log(action);
-      
+
       await editEvent(event);
     } else if (action === "create") {
       await addEvent(event);
@@ -116,21 +104,20 @@ export default function Eventos() {
     return deletedId;
   };
 
-  if (loading) {
+  if (load) {
     return <MyCircularProgress />;
   } else {
     return (
       <>
         <Item>
           <Scheduler
-            height={450}
             deletable={true}
             fields={[
               {
                 name: "clientId",
                 type: "select",
                 // Should provide options with type:"select"
-                options: clientesCalendar,
+                options: lisClient,
                 config: {
                   label: "Cliente",
                   required: true,

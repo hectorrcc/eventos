@@ -1,17 +1,17 @@
 import { createContext, useState } from "react";
-import { Client } from "../../app/MyInterfaces";
-import { client } from "./Clientes";
+import { ClientModel } from "../../Models"
+import { client } from "./Clients";
 
 interface PropClientProvider {
   children: React.ReactNode;
 }
 
 export interface createContex {
-  clientes: Client[];
-  setClientes: (item: Client[]) => void;
+  clientes: ClientModel[];
+  setClientes: (item: ClientModel[]) => void;
 
-  clienteEdit: Client;
-  setClienteEdit: (item: Client) => void;
+  clienteEdit: ClientModel;
+  setClienteEdit: (item: ClientModel) => void;
 
   clientDelete: string[];
   setClientDelete: (item: string[]) => void;
@@ -23,8 +23,8 @@ export interface createContex {
 export const clientContex = createContext({});
 
 export function ClientProvider({ children }: PropClientProvider) {
-  const [clientes, setClientes] = useState<Array<Client>>([]);
-  const [clienteEdit, setClienteEdit] = useState<Client>(client);
+  const [clientes, setClientes] = useState<Array<ClientModel>>([]);
+  const [clienteEdit, setClienteEdit] = useState<ClientModel>(client);
   const [clientDelete, setClientDelete] = useState<Array<string>>([]);
   const [loading, setLoading] = useState<boolean>(true);
 

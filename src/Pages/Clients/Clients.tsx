@@ -3,12 +3,12 @@ import ImagenAdd from "../../Componets/ImagenAdd";
 
 import MyModalClient from "./MyModalClient";
 import MyTable from "./MyTable";
-import { clientContex, createContex } from "./ClientProvider";
-import { getClientes } from "./Clients.Fireabe";
+import { ClientProvider, clientContex, createContex } from "./ClientProvider";
+import { getClientes, userExit } from "../../Firebase/Collections/Clients.Fireabe";
 import MyCircularProgress from "../../Componets/MyCircularProgress";
-import { Client } from "../../app/MyInterfaces";
+import { ClientModel } from "../../Models";
 
-export const client: Client = {
+export const client: ClientModel = {
   id: "",
   name: "",
   lastName: "",
@@ -18,25 +18,22 @@ export const client: Client = {
   updatedAt: "",
 };
 
-export default function Clientes() {
+export default function Clients() {
   const [openModal, setOpenModal] = useState(false);
-  const {
-    clientes,
-    setClientes,
-    setClienteEdit,
-    clientDelete,
-    loading,
-    setLoading,
-  } = useContext(clientContex) as createContex;
+  const { clientes, setClientes, setClienteEdit, loading, setLoading } =
+    useContext(clientContex) as createContex;
 
   useEffect(() => {
+   
     const client = async () => {
       const list = await getClientes();
       if (list.length > 0) {
         setClientes([...list]);
       }
       setLoading(false);
+      
     };
+   
 
     client();
   }, []);
@@ -47,6 +44,7 @@ export default function Clientes() {
     if (openModal) {
       setClienteEdit(client);
     }
+   
   };
 
   if (loading) {
@@ -63,7 +61,6 @@ export default function Clientes() {
       return (
         <>
           <MyModalClient handleOpenModal={handleOpenModal} open={openModal} />
-
           <ImagenAdd handleEvent={handleOpenModal} />
         </>
       );

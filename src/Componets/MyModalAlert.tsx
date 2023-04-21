@@ -5,15 +5,22 @@ import DialogTitle from "@mui/material/DialogTitle";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
-import { PropModal } from "../app/MyInterfaces";
+
 import Typography from "@mui/material/Typography";
 
+interface PropModalAlert{
+  handleSubmit: ()=> void;
+  handleOpenModal: ()=> void;
+  loadingSubmit?: boolean;
+  open: boolean;
+  
+}
 export default function MyModalAlert({
   handleSubmit,
   handleOpenModal,
   open,
   loadingSubmit,
-}: PropModal) {
+}: PropModalAlert) {
   return (
     <>
       <Dialog open={open} onClose={handleOpenModal} maxWidth={"xs"}>

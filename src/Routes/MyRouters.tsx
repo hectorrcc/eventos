@@ -1,8 +1,9 @@
 import Layout from "../Componets/Layout";
 import Home from "../Pages/Home";
 import { RouteObject } from "react-router";
-import IndexClient from "../Pages/Clientes/IndexClient";
-import IndexEventos from "../Pages/Eventos/IndexEventos";
+import Clients from "../Pages/Clients"
+import Eventos from "../Pages/Eventos";
+import { ClientProvider } from "../Pages/Clients/ClientProvider";
 
 
 export const MyRouters: RouteObject = {
@@ -15,12 +16,12 @@ export const MyRouters: RouteObject = {
     },
     {
       path: "/clientes",
-      element: <IndexClient />,
+      element:<ClientProvider><Clients/></ClientProvider> ,
       
     },
     {
       path: "/eventos",
-      element: <IndexEventos />,
+      element: <Eventos />,
     },
   ]
 };

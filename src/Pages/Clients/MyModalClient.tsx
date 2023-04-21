@@ -7,11 +7,15 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState, ChangeEvent, useContext, FormEvent, useEffect } from "react";
-import { Client, PropModal } from "../../app/MyInterfaces";
+import { ClientModel } from "../../Models";
 import { clientContex, createContex } from "./ClientProvider";
-import { addClient, editClient } from "./Clients.Fireabe";
+import {
+  addClient,
+  editClient,
+  userExit,
+} from "../../Firebase/Collections/Clients.Fireabe";
 import { useSnackbar } from "notistack";
-import { client } from "./Clientes";
+import { client } from "./Clients";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
@@ -34,6 +38,10 @@ const schema = object({
     .email("El email no tiene un formato válido"),
 });
 
+interface PropModal {
+  open: boolean;
+  handleOpenModal: () => void;
+}
 export default function MyModalClient({ open, handleOpenModal }: PropModal) {
   const { clientes, setClientes, clienteEdit, setClienteEdit } = useContext(
     clientContex
@@ -45,7 +53,7 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
     reset,
     setValue,
     formState: { errors },
-  } = useForm<Client>({
+  } = useForm<ClientModel>({
     resolver: yupResolver(schema),
     mode: "onChange",
   });
@@ -57,15 +65,19 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
     }
   }, [clienteEdit]);
 
-  const submitForm: SubmitHandler<Client> = (data: Client) => {
+  const submitForm: SubmitHandler<ClientModel> = async (data: ClientModel) => {
     if (clienteEdit.id != "") {
       editClientModal(data);
-    } else {
-      createNuewClient(data);
+    }
+    if (clienteEdit.id == "") {
+      const verificationEmail = await clientExit(data.email);
+      if (!verificationEmail) {
+        createNuewClient(data);
+      }
     }
   };
 
-  const createNuewClient = (data: Client) => {
+  const createNuewClient = (data: ClientModel) => {
     setLoading(true);
 
     const response = async () => {
@@ -75,7 +87,7 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
           const newClient = data;
           newClient.id = result.idClient as string;
           setClientes([...clientes, newClient]);
-          resetForm(data);
+          resetForm();
           setLoading(false);
           handleOpenModal();
           enqueueSnackbar("Cliente agregado con exito", {
@@ -99,7 +111,7 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
     response();
   };
 
-  const editClientModal = (data: Client) => {
+  const editClientModal = (data: ClientModel) => {
     setLoading(true);
     data.id = clienteEdit.id;
 
@@ -115,7 +127,7 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
         setClientes(newClients);
         setClienteEdit(client);
         setLoading(false);
-        resetForm(data);
+        resetForm();
         handleOpenModal();
         enqueueSnackbar("Cliente editado con exito", {
           variant: "success",
@@ -130,7 +142,23 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
     response();
   };
 
-  const resetForm = (data: Client): void => {
+  const clientExit = async (email: string) => {
+    const value = await userExit(email);
+    if (value) {
+      enqueueSnackbar(`La direccion de correo ${email} ya existe `, {
+        variant: "error",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "bottom",
+        },
+      });
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const resetForm = (): void => {
     reset();
     setValue("name", "");
     setValue("lastName", "");
@@ -138,7 +166,7 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
     setValue("email", "");
   };
 
-  const fillForm = (data: Client): void => {
+  const fillForm = (data: ClientModel): void => {
     setValue("name", data.name);
     setValue("lastName", data.lastName);
     setValue("phone", data.phone);
@@ -147,7 +175,7 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
 
   return (
     <div>
-      <Dialog open={open} onClose={handleOpenModal} maxWidth={"xs"}>
+      <Dialog open={open} maxWidth={"xs"}>
         <DialogTitle>Nuevo cliente</DialogTitle>
         <DialogContent>
           <TextField
@@ -206,10 +234,18 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
             {...register("email")}
             helperText={errors.email?.message}
             error={!!errors.email}
+            disabled={clienteEdit.email != ""}
           />
         </DialogContent>
         <DialogActions>
-          <Button color="error" onClick={handleOpenModal} variant={"outlined"}>
+          <Button
+            color="error"
+            onClick={() => {
+              handleOpenModal();
+              resetForm();
+            }}
+            variant={"outlined"}
+          >
             Cancel
           </Button>
           <LoadingButton

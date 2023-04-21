@@ -1,7 +1,8 @@
 import * as React from "react";
 import "../css/MyStilos.css";
-import avatar from '../asset/avatars/20221217_114454.jpg'
-import logo from '../asset/img/myLogo.png'
+import avatar from "../asset/avatars/20221217_114454.jpg";
+import logo from "../asset/img/myLogo.png";
+import { Link } from "react-router-dom";
 
 export default function MyMenu() {
   return (
@@ -12,10 +13,10 @@ export default function MyMenu() {
       </div>
       <ul className="nav-links">
         <li>
-          <a href="/">
+          <Link className="myLinks" to={"/"}>
             <i className="bx bx-grid-alt"></i>
             <span className="link_name">Tablero</span>
-          </a>
+          </Link>
           <ul className="sub-menu blank">
             <li>
               <a className="link_name" href="#">
@@ -26,10 +27,10 @@ export default function MyMenu() {
         </li>
 
         <li>
-          <a href="/clientes">
+          <Link className="myLinks" to={"/clientes"}>
             <i className="bx bxs-user-rectangle"></i>
             <span className="link_name">Clientes</span>
-          </a>
+          </Link>
           <ul className="sub-menu blank">
             <li>
               <a className="link_name" href="#">
@@ -39,10 +40,10 @@ export default function MyMenu() {
           </ul>
         </li>
         <li>
-          <a href="/eventos">
+          <Link className="myLinks" to={"/eventos"}>
             <i className="bx bx-calendar"></i>
             <span className="link_name">Eventos</span>
-          </a>
+          </Link>
           <ul className="sub-menu blank">
             <li>
               <a className="link_name" href="#">

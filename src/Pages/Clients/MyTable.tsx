@@ -14,10 +14,10 @@ import { useSnackbar } from "notistack";
 import Checkbox from "@mui/material/Checkbox";
 import MyBar from "../../Componets/MyBar";
 import { clientContex, createContex } from "./ClientProvider";
-import { deletClient, getClientes } from "./Clients.Fireabe";
+import { deletClient, getClientes } from "../../Firebase/Collections/Clients.Fireabe";
 import MyModalAlert from "../../Componets/MyModalAlert";
 import MyAvatar from "../../Componets/MyAvatar";
-import { Client } from "../../app/MyInterfaces";
+import { ClientModel } from "../../Models";
 
 interface Column {
   id: "check" | "avatar" | "name" | "email" | "phone" | "options";

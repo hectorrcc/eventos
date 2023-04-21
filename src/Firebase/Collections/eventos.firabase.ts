@@ -11,7 +11,7 @@ import {
   updateDoc,
   Timestamp,
 } from "firebase/firestore";
-import { db } from "../../Firebase/Config.firebase";
+import { db } from "../Config.firebase";
 import { ProcessedEvent, ViewEvent } from "@aldabil/react-scheduler/types";
 
 const eventosCollection = collection(db, "eventos");
