@@ -13,13 +13,14 @@ import {
 } from "firebase/firestore";
 import { db } from "../Config.firebase";
 import { ProcessedEvent, ViewEvent } from "@aldabil/react-scheduler/types";
+import { Response, EventModel } from "../Models";
 
 const eventosCollection = collection(db, "eventos");
 
 export async function getEventos(queryEvent: ViewEvent) {
-  const result: ProcessedEvent[] = [];
-
+  const respose: Response = {};
   try {
+    const result: ProcessedEvent[] = [];
     const q = query(
       eventosCollection,
       where("start", ">=", queryEvent.start),
@@ -39,10 +40,15 @@ export async function getEventos(queryEvent: ViewEvent) {
       result.push(event as ProcessedEvent);
     });
 
-    return result;
+    respose.data = result;
+    return respose;
   } catch (error) {
-    console.error(error);
-    return result;
+    const newError = new Error(
+      `Error al cargar los datos de Eventos. Hay Problemas de connexión `
+    ).message;
+    console.error(newError, error);
+    respose.error = newError;
+    return respose;
   }
 }
 

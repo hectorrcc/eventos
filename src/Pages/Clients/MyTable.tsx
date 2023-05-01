@@ -17,7 +17,7 @@ import { clientContex, createContex } from "./ClientProvider";
 import { deletClient, getClientes } from "../../Firebase/Collections/Clients.Fireabe";
 import MyModalAlert from "../../Componets/MyModalAlert";
 import MyAvatar from "../../Componets/MyAvatar";
-import { ClientModel } from "../../Models";
+import { ClientModel } from "../../Firebase/Models";
 
 interface Column {
   id: "check" | "avatar" | "name" | "email" | "phone" | "options";

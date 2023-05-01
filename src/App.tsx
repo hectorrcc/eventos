@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Router from "./Routes/Router";
-
-import { Counter } from "./features/counter/Counter";
-
+import { SnackbarProvider } from "notistack";
 
 function App() {
   return (
     <BrowserRouter>
-      <Router />
+      <SnackbarProvider maxSnack={3}>
+        <Router />
+      </SnackbarProvider>
     </BrowserRouter>
   );
 }

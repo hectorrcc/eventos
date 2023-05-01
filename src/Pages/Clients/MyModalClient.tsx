@@ -1,3 +1,7 @@
+/////////////////////  DATABASE AND MODELS/////////////////////////////////////
+import { ClientModel, InitClient } from "../../Firebase/Models";
+import { clientesCollection } from "../../Firebase/Collections/";
+/////////////////////////////  COMPONENTS  ////////////////////////////////////////
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
@@ -6,19 +10,17 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useState, ChangeEvent, useContext, FormEvent, useEffect } from "react";
-import { ClientModel } from "../../Models";
-import { clientContex, createContex } from "./ClientProvider";
-import {
-  addClient,
-  editClient,
-  userExit,
-} from "../../Firebase/Collections/Clients.Fireabe";
-import { useSnackbar } from "notistack";
-import { client } from "./Clients";
+//////////////////////////////////////////////////////////////////////////////////
+////////////////////////////  HOOKS PROVIDERS ////////////////////////////////////////////
+import { useState, useContext, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useSnackbar } from "notistack";
+import { clientContex, createContex } from "./ClientProvider";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { object, string } from "yup";
+import { number, object, string } from "yup";
+/////////////////////////////////////////////////////////////////////////////////
+
+
 
 const schema = object({
   name: string()
@@ -31,7 +33,7 @@ const schema = object({
     .min(1, "El apellido tiene que tener al menos un carácter")
     .max(100, "El apellido no puede superar los 100 carácteres"),
 
-  phone: string().required("El número de telefono es obligatorio"),
+  phone: number().required("El número de telefono es obligatorio"),
 
   email: string()
     .required("El email es obligatorio")
@@ -56,6 +58,7 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
   } = useForm<ClientModel>({
     resolver: yupResolver(schema),
     mode: "onChange",
+    defaultValues: InitClient
   });
   const [loading, setLoading] = useState(false);
 
@@ -81,25 +84,24 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
     setLoading(true);
 
     const response = async () => {
-      const result = await addClient(data);
-      try {
-        if (result.idClient) {
-          const newClient = data;
-          newClient.id = result.idClient as string;
-          setClientes([...clientes, newClient]);
-          resetForm();
-          setLoading(false);
-          handleOpenModal();
-          enqueueSnackbar("Cliente agregado con exito", {
-            variant: "success",
-            anchorOrigin: {
-              horizontal: "right",
-              vertical: "bottom",
-            },
-          });
-        }
-      } catch (error) {
-        enqueueSnackbar("error al crear el cliente", {
+      const result = await clientesCollection.addClient(data);
+
+      if (result.data) {
+        const newClient = result.data as ClientModel;
+        setClientes([...clientes, newClient]);
+        resetForm();
+        setLoading(false);
+        handleOpenModal();
+        enqueueSnackbar("Cliente agregado con exito", {
+          variant: "success",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "bottom",
+          },
+        });
+      }
+      if (result.error) {
+        enqueueSnackbar(result.error, {
           variant: "error",
           anchorOrigin: {
             horizontal: "right",
@@ -107,6 +109,8 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
           },
         });
       }
+
+      setLoading(false);
     };
     response();
   };
@@ -116,7 +120,7 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
     data.id = clienteEdit.id;
 
     const response = async () => {
-      const result = await editClient(data);
+      const result = await clientesCollection.editClient(data);
       if (result) {
         const newClients = clientes.map((item) => {
           if (item.id === clienteEdit.id) {
@@ -125,7 +129,7 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
           return item;
         });
         setClientes(newClients);
-        setClienteEdit(client);
+        setClienteEdit(InitClient);
         setLoading(false);
         resetForm();
         handleOpenModal();
@@ -143,7 +147,7 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
   };
 
   const clientExit = async (email: string) => {
-    const value = await userExit(email);
+    const value = await clientesCollection.userExit(email);
     if (value) {
       enqueueSnackbar(`La direccion de correo ${email} ya existe `, {
         variant: "error",
@@ -160,10 +164,7 @@ export default function MyModalClient({ open, handleOpenModal }: PropModal) {
 
   const resetForm = (): void => {
     reset();
-    setValue("name", "");
-    setValue("lastName", "");
-    setValue("phone", "");
-    setValue("email", "");
+  
   };
 
   const fillForm = (data: ClientModel): void => {

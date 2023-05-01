@@ -1,4 +1,4 @@
-import { db } from "../Config.firebase";
+import { db, findOutConnection } from "../Config.firebase";
 import {
   collection,
   addDoc,
@@ -11,66 +11,76 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { ClientModel } from "../../Models";
 
-export interface ResponseClient {
-  arrayClient?: ClientModel[];
-  idClient?: {};
-  errorClient?: {} | unknown;
-}
+import { ClientModel, Response } from "../Models";
+import { errorApi } from "../../utils";
 
 const clientCollection = collection(db, "clientes");
 
 export async function getClientes() {
+  let response: Response = {};
   try {
-    const listClient: ClientModel[] = [];
-    const clientSnarshopRef = await getDocs(clientCollection);
+    const findConnection = true;
+    if (findConnection) {
+      const listClient: ClientModel[] = [];
+      const clientSnarshopRef = await getDocs(clientCollection);
 
-    clientSnarshopRef.docs.forEach((doc) => {
-      let client = doc.data() as ClientModel;
-      client.id = doc.id;
-      listClient.push(client);
-    });
-
-    return listClient;
+      clientSnarshopRef.docs.forEach((doc) => {
+        let client = doc.data() as ClientModel;
+        client.id = doc.id;
+        listClient.push(client);
+      });
+      response.data = listClient;
+      return response;
+    } else {
+      const newError = new Error(errorApi.failGetData).message;
+      response.error = newError;
+      console.error(newError);
+      return response;
+    }
   } catch (error) {
-    console.error(new Error("Error al cargar los cliente"), error);
-    return [];
+    const newError = new Error(errorApi.failGetData).message;
+    response.error = newError;
+    console.error(newError);
+    return response;
   }
 }
 
 export async function addClient(client: ClientModel) {
-  const response: ResponseClient = {};
+  let response: Response = {};
   try {
     const fecha = Date.now();
     client.createdAt = String(new Date(fecha));
     const resp = await addDoc(clientCollection, client);
     client.id = resp.id;
     setDoc(doc(clientCollection, client.id), client);
-    response.idClient = resp.id;
+    response.data = client;
     return response;
   } catch (error) {
-    console.error(new Error("Error al agregar el cliente"), error);
+    const newError = new Error(errorApi.failCreateData).message;
+    response.error = newError;
+    console.error(newError, error);
     return response;
   }
 }
 
 export async function deletClient(clientID: string[]) {
+  let response: Response = {};
   try {
     clientID.map(async (item) => {
       await deleteDoc(doc(clientCollection, item));
     });
     //return await getClientes();
   } catch (error) {
-    console.error(new Error("Error al eliminar el cliente"), error);
+    console.error(new Error(errorApi.failDeleteData), error);
     return [];
   }
 }
 
 export async function editClient(client: ClientModel) {
+  const response: Response = {};
   try {
     const fecha = Date.now();
-    console.log(client);
 
     const docRef = doc(clientCollection, client.id);
     const resp = await updateDoc(docRef, {
@@ -79,6 +89,7 @@ export async function editClient(client: ClientModel) {
       email: client.email,
       updatedAt: String(new Date(fecha)),
     });
+    // response.data = resp
 
     return true;
   } catch (error) {

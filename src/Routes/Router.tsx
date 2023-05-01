@@ -1,7 +1,7 @@
 import {useRoutes} from 'react-router-dom'
-import { MyRouters } from './MyRouters'
+import { rutas} from './MyRouters'
 
 
 export default function Router() {
-    return useRoutes([MyRouters])
+    return useRoutes(rutas)
 };

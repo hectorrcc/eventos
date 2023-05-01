@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { getClientes } from "../Firebase/Collections/Clients.Fireabe";
-import { ClientModel } from "../Models";
+import { clientesCollection } from "../Firebase/Collections/";
+import { ClientModel } from "../Firebase/Models";
+import { enqueueSnackbar } from "notistack";
 
 const ClienInit: ClientModel = {
   id: "",
@@ -17,9 +18,18 @@ export function useClient() {
 
   useEffect(() => {
     const client = async () => {
-      const list = await getClientes();
-      if (list.length > 0) {
-        setClients([...list]);
+      const response = await clientesCollection.getClientes();
+      if (response.data) {
+        setClients([...(response.data as [])]);
+      }
+      if (response.error) {
+        enqueueSnackbar(response.error, {
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "bottom",
+          },
+        });
       }
       setLoading(false);
     };

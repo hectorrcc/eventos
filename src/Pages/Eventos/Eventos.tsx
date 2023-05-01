@@ -1,6 +1,4 @@
 import { Scheduler } from "@aldabil/react-scheduler";
-import { useEffect, useState } from "react";
-import { getClientes } from "../../Firebase/Collections/Clients.Fireabe";
 import {
   blue,
   green,
@@ -26,6 +24,7 @@ import {
 } from "../../Firebase/Collections/eventos.firabase";
 
 import { useClient } from "../../CustomHooks";
+import { enqueueSnackbar } from "notistack";
 
 const colors: SelectOption[] = [
   {
@@ -79,7 +78,18 @@ export default function Eventos() {
   const fetchRemote = async (query: ViewEvent): Promise<ProcessedEvent[]> => {
     const result = await getEventos(query);
 
-    return result;
+    if (result.data) {
+      return result.data as ProcessedEvent[];
+    } else {
+      enqueueSnackbar(result.error, {
+        variant: "error",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "bottom",
+        },
+      });
+      return [];
+    }
   };
 
   const handleConfirm = async (

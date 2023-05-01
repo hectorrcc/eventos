@@ -1,6 +1,5 @@
 import { createContext, useState } from "react";
-import { ClientModel } from "../../Models"
-import { client } from "./Clients";
+import { ClientModel, InitClient } from "../../Firebase/Models";
 
 interface PropClientProvider {
   children: React.ReactNode;
@@ -24,7 +23,7 @@ export const clientContex = createContext({});
 
 export function ClientProvider({ children }: PropClientProvider) {
   const [clientes, setClientes] = useState<Array<ClientModel>>([]);
-  const [clienteEdit, setClienteEdit] = useState<ClientModel>(client);
+  const [clienteEdit, setClienteEdit] = useState<ClientModel>(InitClient);
   const [clientDelete, setClientDelete] = useState<Array<string>>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -38,7 +37,7 @@ export function ClientProvider({ children }: PropClientProvider) {
         clientDelete,
         setClientDelete,
         loading,
-        setLoading
+        setLoading,
       }}
     >
       {children}

@@ -3,8 +3,10 @@ import "../css/MyStilos.css";
 import avatar from "../asset/avatars/20221217_114454.jpg";
 import logo from "../asset/img/myLogo.png";
 import { Link } from "react-router-dom";
+import { useUserSlice } from "../redux/slices";
 
 export default function MyMenu() {
+  const userLogin = useUserSlice();
   return (
     <div className="sidebar ">
       <div className="logo-details">
@@ -58,8 +60,8 @@ export default function MyMenu() {
               <img src={avatar} />
             </div>
             <div className="name-job">
-              <div className="profile_name">Héctor Cabrera</div>
-              <div className="job">Computer Ingineer</div>
+              <div className="profile_name">{userLogin.name}</div>
+              <div className="job">{userLogin.email}</div>
             </div>
             <i className="bx bx-log-out"></i>
           </div>

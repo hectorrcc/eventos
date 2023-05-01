@@ -4,13 +4,18 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { Item } from "./MyContainer";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 type PropBar = {
   name: string;
   deleteElemts: string[];
   handleEventCreate: () => void;
   handleEventDelete: () => void;
+};
+
+const style = {
+  display: "inline-block",
+  marginRight: "10px",
 };
 
 export default function MyBar({
@@ -23,32 +28,33 @@ export default function MyBar({
     <Grid>
       <Item>
         <Grid container>
-          <Grid item lg={10} md={10} xs={12}>
+          <Grid item md={8} lg={10} xs={12}>
             <Typography variant="h5" component="h5">
               {name}
             </Typography>
           </Grid>
 
-          <Grid item lg={2} md={2} xs={1}>
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <IconButton
-                aria-label="delete"
-                size="medium"
-                color="primary"
-                onClick={handleEventCreate}
-              >
-                <AddBoxIcon fontSize="inherit" />
-              </IconButton>
-              <IconButton
-                aria-label="delete"
-                size="medium"
-                color="error"
-                onClick={handleEventDelete}
-                disabled={deleteElemts.length > 0 ? false : true}
-              >
-                <DeleteIcon fontSize="inherit" />
-              </IconButton>
-            </Stack>
+          <Grid style={{ display: "inline-block" }} item md={4} lg={2} xs={12}>
+            <Button
+              onClick={handleEventCreate}
+              style={{ marginRight: "5px" }}
+              variant="outlined"
+              size="small"
+              startIcon={<AddBoxIcon />}
+            >
+              Nuevo
+            </Button>
+            <Button
+              onClick={handleEventDelete}
+              style={{ marginRight: "5px" }}
+              variant="outlined"
+              size="small"
+              color="error"
+              startIcon={<DeleteIcon />}
+              disabled={deleteElemts.length > 0 ? false: true}
+            >
+              Delete
+            </Button>
           </Grid>
         </Grid>
       </Item>
